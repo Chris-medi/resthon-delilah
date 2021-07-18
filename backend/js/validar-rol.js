@@ -1,23 +1,37 @@
 const {validar_token} = require('./token');
 const {connection} = require('../connection');
-const { response } = require('express');
+
 
 
 const validate_rol = (req,res,next)=>{
-    const {token} = req.params;
-    const  {info_descode} = validar_token(token);
-    connection.query('SELECT * FROM Users Where email = ',[info_descode],(err,rows)=>{
+    const {authorization } = req.headers;
+    const  {info_descode} = validar_token(authorization);
+    // console.log(info_descode)
+    connection.query('SELECT rol FROM Users Where email = ?',[info_descode],(err,rows)=>{
+        // console.log(rows[0].rol)
         if(err){
             res.status(500).json({
                 message:"Error en el servidor"
             })
         }
-        if(rows.email == info_descode){
-            next()
+        // console.log(rows)
+        if(rows[0].rol!=1){
+            res.status(403).json({
+                message:"no tienes permisos para realizar esta tarea"
+            })
         }else{
-            res.status(403).send("No tienes permisos para realizar esta tarea")
+            next();
         }
+        if(rows.length==0){
+            res.status(403).json({
+                message:"no tienes permisos para realizar esta tarea!!"
+            })
+        }
+        
     })
 
+}
 
+module.exports = {
+    validate_rol
 }

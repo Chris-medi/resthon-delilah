@@ -6,6 +6,7 @@ CREATE DATABASE bd_restaurnt
 CREATE TABLE `sql10425003`.`Users` ( 
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
     `fullName` VARCHAR(100) NOT NULL , 
+     `userName` VARCHAR(100) NOT NULL,
     `email` VARCHAR(100) NOT NULL , 
     `password` VARCHAR(100) NOT NULL ,
      `rol` BOOLEAN NOT NULL DEFAULT FALSE  

@@ -16,16 +16,8 @@ app.use(cors());
 
 
 //definir rutas
-// const router = require('./routers/rutas');
-// app.use(router)
 
 
-//jwt
-// const token = require('./js/token');
-
-
-// const funciones = require('./js/functions');
-// const {validar_informacion,exitencia_Usuario,encriptar_password} = require ('./js/functions')
 
 
 //recibir parametros por el body
@@ -37,21 +29,24 @@ app.use(Router);
 
 
 //---------------rutas GET ---------------
-
 const routerGet = require('./routers/get/rutasGet');
 app.use('/api',routerGet);
+
 
 //------------rutas PUT --------------
 const routerPut = require('./routers/Put/rutaspPut')
 app.use('/api',routerPut);
-// app.post('/api/user',(req,res)=>{
-//     let datos = req.body
-//     res.json({
-//         data:{
-//             datos
-//         }
-//     })
-// })
+
+
+//------------ rutas POST --------------
+const routerPost = require('./routers/post/rutasPost')
+app.use('/api',routerPost);
+
+
+//--------------- rutas DELETE --------------
+const routerDelete = require('./routers/delete/rutasDelete');
+app.use('/api',routerDelete);
+
 
 
 
