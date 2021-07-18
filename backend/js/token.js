@@ -1,4 +1,4 @@
-const { valid } = require('joi');
+
 const jwt = require('jsonwebtoken');
 const {firma} = require('../../entorno')
 
