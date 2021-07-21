@@ -1,5 +1,5 @@
 
-const {schema_user,schema_product,schema_product_update} = require('../definir/schemas')
+const {schema_user,schema_product,schema_product_update,schema_orden} = require('../definir/schemas')
 
 const validate_information = (objeto)=>{
    let valid = schema_user.validate(objeto) 
@@ -20,9 +20,17 @@ const validate_product_update = (objeto) =>{
    return valid
 };
 
+const validate_orden =  (objeto) =>{
+   let valid = schema_orden.validate(objeto)
+   // console.log(valid)
+   return valid
+};
+
+
 module.exports = {
    validate_product,
     validate_information,
-    validate_product_update
+    validate_product_update,
+    validate_orden
     
 }

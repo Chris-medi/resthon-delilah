@@ -10,11 +10,11 @@ routerGet.get('/users',(req,res)=>{
     connection.query('SELECT * FROM Users',(err,rows)=>{
         if(err){
             res.status(500).json({
-                message:"error intenete mas tarde"
+                message:"error intente mas tarde"
             })
         }
         res.json({
-            message:"operacion exitosa",
+            message:"operacion exitosa!!",
             data:{
                 rows
             }

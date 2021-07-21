@@ -1,7 +1,7 @@
 const express = require('express');
 const routerPost = express.Router();
 
-const { validate_information,validate_product } = require('../../../schema/validat/validat-join');
+const { validate_information,validate_product,validate_orden } = require('../../../schema/validat/validat-join');
 const {validate_rol} = require('../../js/validar-rol')
 const {encriptar,comparar_hash} = require('../../js/bcrypt');
 const {crear_token} = require('../../js/token');
@@ -91,9 +91,19 @@ routerPost.post('/product',validate_rol,(req,res)=>{
 
 
 routerPost.post('/order',(req,res) => {
-    res.json({
-        message: "crear productos"
-    })
+    const valid =  validate_orden(req.body)
+    if(valid.error == null){
+        res.json({
+            message: "crear una orden",
+            valid:valid
+        })
+        //recibo los productos uno o varios
+    }else{
+        res.status(400).json({
+            message: "Error, datos invalidos",
+            error:valid.error.details[0].message
+        })
+    }
 })
 
 module.exports = routerPost

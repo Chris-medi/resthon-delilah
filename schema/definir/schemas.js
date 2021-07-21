@@ -23,9 +23,11 @@ const schema_product_update = joi.object().keys({
 
 const schema_orden = joi.object().keys({
     user_id:joi.number().required(),
-    products_id:joi.number().required(),
+    products_id:joi.array().required(),
 
 })
+
+
 
 module.exports = {
     schema_user,
