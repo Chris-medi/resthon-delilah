@@ -64,7 +64,7 @@ routerPost.post('/signup',async(req,res)=>{
 
 
 
-
+//-------------- create product
 routerPost.post('/product',validate_rol,(req,res)=>{
   let result_valid =   validate_product(req.body)
   if(result_valid.error == null){
