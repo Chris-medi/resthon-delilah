@@ -2,7 +2,7 @@ const express = require('express');
 const routerPut = express.Router();
 const {validate_rol} = require('../../js/validar-rol')
 const {connection} = require('../../connection')
-const {validate_product_update} = require('../../../schema/validat/validat-join')
+const {validate_product_update,validate_update_status} = require('../../../schema/validat/validat-join')
 
 
 routerPut.put('/product',validate_rol,(req,res)=>{
@@ -32,10 +32,21 @@ routerPut.put('/product',validate_rol,(req,res)=>{
 
     // res.json({
     //     message:"esto sera un edpoint para actualizar productos"
-    // })
+    // })s
 });
 
-routerPut.put('/order',(req,res)=>{
+routerPut.put('/order',validate_rol,(req,res)=>{
+    const {body} = req
+    const sql = 'UPDATE `Orders` SET status_orden`=? WHERE  orders_id = ?'
+   const result_validation =validate_update_status(body)
+    // connection.query(sql,[],(err,rows)=>{
+
+    // })
+    if(result_validation){
+        res.json({
+            message:"es valido"
+        })
+    }
     res.json({
         message:"esto sera un edpoint para actualizar estado de la orden"
     })

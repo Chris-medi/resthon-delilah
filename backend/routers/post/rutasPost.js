@@ -4,7 +4,7 @@ const routerPost = express.Router();
 const { validate_information,validate_product,validate_orden } = require('../../../schema/validat/validat-join');
 const {validate_rol} = require('../../js/validar-rol')
 const {encriptar,comparar_hash} = require('../../js/bcrypt');
-const {crear_token} = require('../../js/token');
+const {crear_token,validar_token} = require('../../js/token');
 const { connection } = require('../../connection');
 
 
@@ -90,14 +90,67 @@ routerPost.post('/product',validate_rol,(req,res)=>{
 })
 
 
-routerPost.post('/order',(req,res) => {
+//---------------------------------crear una orden--------
+
+routerPost.post('/order',async(req,res) => {
+    const {products_id} = req.body
+    const {authorization} = req.headers
+
     const valid =  validate_orden(req.body)
-    if(valid.error == null){
-        res.json({
-            message: "crear una orden",
-            valid:valid
+
+    if(authorization == null){
+        res.status(400).json({
+            message: "se requiere token"
         })
-        //recibo los productos uno o varios
+    }
+    //recibo los productos uno o varios
+   
+    const promise_total_price = new Promise((resolve,rejet)=>{
+      connection.query(`SELECT SUM(price) FROM Products WHERE product_id IN (?) `,[products_id],(err,rows) =>{
+          if(err){
+              res.status(500).json({
+                  message: "Error vuelve a intertarlo",
+                  error:err
+                })
+            }
+            resolve(rows[0]['SUM(price)'])
+            // console.log(rows[0]['SUM(price)'])
+      })
+  })
+    const promise_search_user = new Promise((resolve,rejet)=>{
+        const {info_descode} = validar_token(authorization)
+        connection.query(`SELECT ID FROM Users WHERE email= ?`,[info_descode],(err,rows) =>{
+            if(!err){
+                resolve(rows[0].ID)
+            }
+        })
+    }) 
+    const create_orden = (id_details,price,user_id)=>{
+        const sql = 'INSERT INTO `Orders`( `detail_id`, `total_price`, `user_id`) VALUES (?,?,?)'
+        connection.query(sql,[id_details,price,user_id],(err,rows) => {
+            if(err){
+                res.status(500).json({
+                    message: "Error en el servidor",
+                    error:err
+                })
+            }
+            res.json({
+                message: "Orden creada",
+                id:rows
+            })
+            
+        })
+    }
+
+    if(valid.error == null){
+      promise_total_price.then(res =>{
+          console.log(res)
+          promise_search_user.then(result =>{
+              console.log(result)
+              create_orden(1,res,result)
+          })
+      })
+        
     }else{
         res.status(400).json({
             message: "Error, datos invalidos",

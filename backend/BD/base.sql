@@ -28,3 +28,10 @@ CREATE TABLE Pedido(
     FOREIGN KEY (Product_id) REFERENCES Products(id),
     FOREIGN KEY (User_id) REFERENCES Users(id)
 ]
+
+
+SELECT * 
+FROM Orders 
+INNER JOIN Users ON Users.id = Orders.user_id 
+INNER JOIN Details ON Details.detail_id = Orders.detail_id
+INNER JOIN Products ON Details.product_id = Products.product_id

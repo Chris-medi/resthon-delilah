@@ -22,16 +22,19 @@ const schema_product_update = joi.object().keys({
 })
 
 const schema_orden = joi.object().keys({
-    user_id:joi.number().required(),
     products_id:joi.array().required(),
 
 })
-
+const schema_status = joi.object().keys({
+    status:joi.string().required(),
+    user_id:joi.number().required()
+})
 
 
 module.exports = {
     schema_user,
     schema_product,
     schema_orden,
-    schema_product_update
+    schema_product_update,
+    schema_status
 } 

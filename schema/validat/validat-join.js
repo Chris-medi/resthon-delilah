@@ -1,5 +1,5 @@
 
-const {schema_user,schema_product,schema_product_update,schema_orden} = require('../definir/schemas')
+const {schema_user,schema_product,schema_product_update,schema_orden,schema_status} = require('../definir/schemas')
 
 const validate_information = (objeto)=>{
    let valid = schema_user.validate(objeto) 
@@ -27,10 +27,33 @@ const validate_orden =  (objeto) =>{
 };
 
 
+const validate_update_status = (objeto) =>{
+   const {status} = objeto
+   let valid = schema_status.validate(objeto)
+   const valores_validos = {
+      "entregado":'entregado',
+      "cancelado":'cancelado',
+      "terminado":'terminado'
+   }
+   if(valid.error!=null){
+         return valid.error.details[0].message
+   }
+   // console.log(valores_validos[status])
+   if(valores_validos[status]== undefined){
+      return {
+         error:'valor invalido',
+         valores: valores_validos
+      }
+   }else{
+      return true
+   }
+
+}
 module.exports = {
    validate_product,
     validate_information,
     validate_product_update,
-    validate_orden
+    validate_orden,
+    validate_update_status
     
 }

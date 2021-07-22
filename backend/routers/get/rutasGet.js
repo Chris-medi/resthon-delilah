@@ -1,5 +1,5 @@
 const express = require('express');
-const routerGet = express.Router()
+const routerGet = express.Router();
 
 const {connection} = require('../../connection')
 
@@ -23,12 +23,23 @@ routerGet.get('/users',(req,res)=>{
 })
 
 routerGet.get('/products',(req,res)=>{
-    res.json({
-        message: "esto seria una lista de productos"
+     connection.query('SELECT * FROM Products',(err,rows)=>{
+        if(err){
+            res.status(500).json({
+                message:"Error en el servidor"
+            })
+        }
+        res.json({
+            message:"productos disponibles",
+            data:rows
+        })
+        
     })
+
 })
 
 routerGet.get('/orders',(req,res)=>{
+  
     res.json({
         message:"Esto sera todas las orden y sus estados"
     })
