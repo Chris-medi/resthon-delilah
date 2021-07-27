@@ -1,21 +1,28 @@
 const express = require('express');
 const routerDelete = express.Router();
-const {validate_rol } = require('../../js/validar-rol');
+
 const {connection} = require('../../connection')
 
-routerDelete.delete('/product/:id',validate_rol,(req,res) => {
+const httpError500 = require('../../helper/dandleError')
+
+routerDelete.delete('/product/:id',(req,res) => {
     const {id} = req.params
-    connection.query('SELECT * FROM Products WHERE Product_id = ?',[id],(err,rows) =>{
-        if(err){
-            re.status(500).json({
-                message:"Error en el servidor"
-            })
-        }
+    connection.query('DELETE  FROM Products WHERE Product_id = ?',[id],(err,rows) =>{
+        httpError500(err,res)
         res.json({
-            message:"Producto borrado exitosamente"
+            message:"El producto a sido borrado exitosamente"
         })
     })
-    // console.log(id)
+})
+
+routerDelete.delete('/order/:id',(req,res)=>{
+    const {id} = req.params;
+    connection.query('DELETE  FROM Orders where orders_id = ?',[id],(err,rows)=>{
+        httpError500(err,res)
+        res.json({
+            message:"La Orden a sido borrada exitosamente"
+        })
+    })
 })
 
 module.exports =routerDelete;

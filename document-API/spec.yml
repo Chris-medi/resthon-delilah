@@ -1,4 +1,5 @@
-apenapi:3.0.1
+apenapi: 3.0.1
+
 info:
   title: Api  Delilah Reston
   description: it is Api orden restaurant 
@@ -6,6 +7,7 @@ info:
     name: Cristian Camilo Medina Franco
     email: ccfranm17@gmail.com
   version: 0.1
+
 servers:
   - url: https://localhost:3000
 
@@ -18,8 +20,248 @@ tags:
     description: orders of products 
 
 paths:
- /login:
+ /api/signin:
    post: 
+    tags:
+      - "user"
+    summary: "the users enters"
+    description: "user  log-up get token of validatio for future"
+    operations: "get-token-User"
+    reponses:
+      '400':
+       description: data required
+      '404':
+       description:  email no found
+      '401':
+       description: incorrect password 
+      '500':
+        description: server error 
+      '200':
+        description: usuario encontrado  
+
+
+   requestBody: 
+    description: "objeto"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: #/component/schemas/inforUser
+          
+
+ /api/signup:
+   post:
+    tags:
+      - "user"
+    summary: "add new user " 
+    description: "the people create new user on database"
+    operations: "create user"
+    reponses:
+      '400':
+        description: data invalid
+      '401':
+        description: email ya existe
+      '500':
+        description: server error 
+      '200':
+        description: usuario login successful
+    requestBody:
+      description: "object"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 
+
+ /api/user:
+    get:
+      tags:
+        - "user"
+      summary: "get all info user " 
+      description: "user get all about your information"
+      operations: "get all info user"
+      reponses:
+        '400':
+          description: token required
+        '500':
+          description: server error 
+        '200':
+          description: usuario encontrado  
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+
+
+
+    
+ /api/product:
+    post:
+      tags:
+        - "product"
+      summary: "create a product" 
+      description: "the user admin create a new product"
+      operations: "create product"
+      reponses:
+        '400':
+          description: data invalida
+        '500':
+          description: server error 
+        '200':
+          description: usuario encontrado  
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+    put:
+      tags:
+        - "product"
+      summary: "update product" 
+      description: "just only a admin user can update a product"
+      operations: "update product"
+      reponses:
+        '400':
+          description: data invalida
+        '500':
+          description: server error 
+        '200':
+          description: update product success
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+
+ /api/product/:id:
+    delete:
+      tags:
+        - "product"
+      summary: "delete product" 
+      description: "just only a admin user can delete a product"
+      operations: "delete product"
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:  
+    
+
+
+ /api/products:
+    get:
+      tags:
+        - "product"
+      summary: "get all products" 
+      description: "all user can get a list of products"
+      operations: "all products"
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+    
+
+ /api/orders:
+    get:
+      tags:
+        - "order"
+      summary: "get all orders" 
+      description: "just only a admin user can get the list of orders"
+      operations: "get list orders"
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+    
+
+ /api/order:
+    post:
+      tags:
+        - "order"
+      summary: "create a new order" 
+      description: "all user can create a new order"
+      operations: "create a order"
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+
+    put:
+      tags:
+        - "order"
+      summary: "update a order" 
+      description: "just only a admin user can update status of a order"
+      operations: "update status order"
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+
+              
+ /api/order/:id:
+    delete:
+      tags:
+        - "order"
+      summary: "delete a order" 
+      description: "just only a admin user can delete a order"
+      operations: "delete a order"
+      requestBody:
+        description: "object"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:   
+
+Component:
+  schemas:
+    addUser:
+      type: "object"
+      title: "addUser"
+      properties:
+        email: 
+          type: "string"
+          examples: carlitos@gmail.com
+        password:
+           type: "string" 
+           example: m123456
+        userName:
+            type: "string"
+            example: carlitos
+        fullName:
+            type: "string"
+            example: Carlos Vega Rios       
+    inforUser: 
+      title: "infoUser"
+      type: "object"
+      properties: 
+        email: 
+          type: "string"
+          example: carlitos@gmail.com
+        password: 
+          type: "string"
+          example: m1223456  
 
 
 

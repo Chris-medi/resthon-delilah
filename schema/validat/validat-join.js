@@ -31,21 +31,28 @@ const validate_update_status = (objeto) =>{
    const {status} = objeto
    let valid = schema_status.validate(objeto)
    const valores_validos = {
-      "entregado":'entregado',
-      "cancelado":'cancelado',
-      "terminado":'terminado'
+      "entregado":"entregado",
+      "cancelado":"cancelado",
+      "terminado":"terminado"
    }
    if(valid.error!=null){
          return valid.error.details[0].message
-   }
-   // console.log(valores_validos[status])
-   if(valores_validos[status]== undefined){
-      return {
-         error:'valor invalido',
-         valores: valores_validos
-      }
    }else{
-      return true
+      // console.log(valores_validos[status])
+      if(valores_validos[status]== undefined){
+         return {
+            error:'valor invalido',
+            valores_validos: [
+               valores_validos['terminado'],
+               valores_validos['entregado'],
+               valores_validos['cancelado']
+            ]
+            
+         }
+      }else{
+         return true
+      }
+      
    }
 
 }

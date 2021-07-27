@@ -1,40 +1,36 @@
-const config = {
-  host:'remotemysql.com',
-  database: 'nV5Q3zY2ll',
-  user:'nV5Q3zY2ll',
-  password:'PGF6MA6aw5'
-}
 const mysql = require('mysql');
+
+const config = {
+  host:process.env.HOST,
+  database: process.env.DATABASE,
+  user:process.env.USER,
+  password:process.env.PASSWORD
+}
+
+
 var connection = mysql.createConnection(config)
+
 
 connection.connect((err)=>{
     if(err){
         console.log("error base de datos " + err)
-        handleDisconnection()
+        // handleDisconnection()
     }
-    console.log('conection exitosa')
-})
-function handleDisconnection() {
-  connection.connect((err)=>{
-    if(!err){
-      console.log('reconnection')
-    }
+    console.log('conection success')
   })
-   connection.on('error', function(err) {
-       console.error('db error', err);
-       if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-           console.error('db error execute reconnection:'+err.message);
-           handleDisconnection();
-       } else {
-           throw err;
-       }
-   });
-   
-   module.exports = {
-       connection
-   }
-}
-handleDisconnection();
+  
+
+setInterval(function () {
+  connection.query('SELECT * FROM Users',(err,rows) => {
+    
+  });
+}, 10000);  
+
+
+module.exports = {
+      connection
+  }
+
 
 
 

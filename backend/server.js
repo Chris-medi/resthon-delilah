@@ -1,28 +1,24 @@
 require('../entorno')
 
-//crear servidor 
+//-----crear servidor 
 const express = require('express');
 const app = express();
-const port = 3060;
+const port = process.env.PORT || 3000
 
 //seguridad para sitio web y permisos
 const cors = require('cors');
 app.use(cors());
-//-----------------
-// var bodyParser = require('body-parser');
-// app.use(bodyParser.urlencoded({ extended: false }))
 
 
+//--------middleware--------
+const {validate_rol} = require('./js/validar-rol')
 
 
-//definir rutas
-
-
-
-
-//recibir parametros por el body
+//recibir parametros desde el body
 app.use(express.urlencoded({ extended: false} ));
 app.use(express.json());
+
+//------------definir rutas
 
 const Router = require('./routers/rutas');
 app.use(Router);
@@ -33,23 +29,23 @@ const routerGet = require('./routers/get/rutasGet');
 app.use('/api',routerGet);
 
 
-//------------rutas PUT --------------
+//--------------rutas PUT --------------
 const routerPut = require('./routers/Put/rutaspPut')
-app.use('/api',routerPut);
+app.use('/api', validate_rol,routerPut);
 
 
-//------------ rutas POST --------------
+//-------------rutas POST --------------
 const routerPost = require('./routers/post/rutasPost')
 app.use('/api',routerPost);
 
 
 //--------------- rutas DELETE --------------
 const routerDelete = require('./routers/delete/rutasDelete');
-app.use('/api',routerDelete);
+app.use('/api', validate_rol,routerDelete);
 
 
 
 
 app.listen(port,()=>{
-    console.log("Escuchando servidor desde el puesto: "+ port )
+    console.log("Listening on port: "+ port )
 });

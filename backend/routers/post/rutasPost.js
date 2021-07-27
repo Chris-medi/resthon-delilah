@@ -8,6 +8,9 @@ const {crear_token,validar_token} = require('../../js/token');
 const { connection } = require('../../connection');
 
 
+//-------handler Error
+const httpError500 = require('../../helper/dandleError')
+
 //--------------router users post -------------------
 routerPost.post('/signup',async(req,res)=>{
     const {fullName,email,userName,password} = req.body
@@ -30,23 +33,20 @@ routerPost.post('/signup',async(req,res)=>{
             let Rol = false
 
             connection.query(sql,[email,fullName,userName,hash_password,Rol],(err,rows)=>{
-                if(err){
-                    res.status(500).json({ status:false,message: "Error!!, intente nuevamente", data:err })
-                }else{
-                    res.json({ status: true, message: "Usuario registrado exitosamente" })
-                }
+                httpError500(err,res)
+                res.json({ message: "Usuario registrado exitosamente" })
             })
 
         } 
         const user_error = ()=>{
-            res.status(400).json({
+            res.status(401).json({
                 message: "email ya existe"
             })
         }
     }
 
     if(validate_joi.error!=null){
-        res.status(403).json({
+        res.status(400).json({
             status:false,
             message: "datos invalidos",
             error: validate_joi.error.details[0].message
@@ -71,14 +71,16 @@ routerPost.post('/product',validate_rol,(req,res)=>{
       const {link_imagen,price,name} = req.body
             const sql = "INSERT INTO Products (link_image, name_product, price) VALUES (?,?,?)"
       connection.query(sql,[name,price,link_imagen],(err,rows)=>{
-          if(!err){
-            res.json({
-                message: "producto agregado exitosamente a la base de datos"
-            })
-          }
-          res.status(500).json({
-            message: "error en el servidor"
+
+        httpError500(err,res)
+        res.json({
+            message: "producto agregado exitosamente a la base de datos"
         })
+        //   if(!err){
+        //   }
+        //   res.status(500).json({
+        //     message: "error en el servidor"
+        // })
       })
     
   }else{
@@ -90,11 +92,27 @@ routerPost.post('/product',validate_rol,(req,res)=>{
 })
 
 
+
+
 //---------------------------------crear una orden--------
 
 routerPost.post('/order',async(req,res) => {
     const {products_id} = req.body
     const {authorization} = req.headers
+
+    //variable para tomar id  de la ultima orden y aumentarle en uno
+
+    const promise_last_id = new Promise(function (resolve, reject) {
+        connection.query('SELECT orden_id FROM Orders',(err,rows) => {
+            if(!err){
+                let last = rows.length-1
+                let  last_id = rows[last]['orden_id']
+                resolve(last_id)
+            }
+        })
+    })
+
+
 
     const valid =  validate_orden(req.body)
 
@@ -102,6 +120,7 @@ routerPost.post('/order',async(req,res) => {
         res.status(400).json({
             message: "se requiere token"
         })
+
     }
     //recibo los productos uno o varios
    
@@ -125,29 +144,49 @@ routerPost.post('/order',async(req,res) => {
             }
         })
     }) 
-    const create_orden = (id_details,price,user_id)=>{
+
+
+    const create_orden = (id_details,price,user_id,products_id)=>{
+        let data = products_id.map((acc)=>{
+            return [id_details,acc]
+        })
+        
+
+        // console.log(data)
+        
         const sql = 'INSERT INTO `Orders`( `detail_id`, `total_price`, `user_id`) VALUES (?,?,?)'
-        connection.query(sql,[id_details,price,user_id],(err,rows) => {
+        connection.query('INSERT INTO Details (detail_id,product_id) VALUES ?',[data],(err,rows) =>{
             if(err){
                 res.status(500).json({
                     message: "Error en el servidor",
                     error:err
                 })
             }
-            res.json({
-                message: "Orden creada",
-                id:rows
-            })
-            
+            connection.query(sql,[id_details,price,user_id],(err,rows) => {
+                if(err){
+                    res.status(500).json({
+                        message: "Error en el servidor",
+                        error:err
+                    })
+                }
+                res.json({
+                    message: "Orden creada",
+                    id:rows
+                })
+                
+        })
         })
     }
 
     if(valid.error == null){
       promise_total_price.then(res =>{
-          console.log(res)
+        //   console.log(res)
           promise_search_user.then(result =>{
-              console.log(result)
-              create_orden(1,res,result)
+            //   console.log(result)
+            promise_last_id.then(id_details =>{
+                create_orden(id_details,res,result,products_id)
+                
+            })
           })
       })
         

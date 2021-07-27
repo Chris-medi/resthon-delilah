@@ -11,7 +11,12 @@ const {crear_token} = require('../js/token');
 router.post('/api/signin',(req,res)=>{
     const {email,password} = req.body
     // console.log(req.body);
-
+    if(email==null || password==null){
+        res.statu(400).json({
+            message: "Datos requeridos",
+            datos: "email and password"
+        })
+    }
     //llamar a la base de datos
     connection.query(`SELECT * FROM Users WHERE  email = ?`,[email],(err,rows)=>{
         if(err){
@@ -19,11 +24,10 @@ router.post('/api/signin',(req,res)=>{
                 message:"error intenete mas tarde",
                 error:err.name
             })
-
-            }
+        }
             if(!err){
                   if(rows.length == null){
-                          res.status(400).json({
+                          res.status(404).json({
                   message:"correo no encontrado"
               })
           }else{
@@ -42,8 +46,7 @@ router.post('/api/signin',(req,res)=>{
                         
                 })
                 }else{
-                        res.status(400).json({    
-                                status:false,
+                        res.status(401).json({    
                         message:"contraseña incorrecta"
                     })
             }

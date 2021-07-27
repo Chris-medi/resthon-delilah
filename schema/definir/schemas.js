@@ -27,7 +27,7 @@ const schema_orden = joi.object().keys({
 })
 const schema_status = joi.object().keys({
     status:joi.string().required(),
-    user_id:joi.number().required()
+    order_id:joi.number().required()
 })
 
 
