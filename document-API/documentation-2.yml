@@ -6,13 +6,8 @@ info:
   title: Delilah Reston
   contact:
     email: ccfranm17@gmail.com
-  license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/Chris-medi/delilah-reston/1.0.0
   - description: deploy project
     url: https://delilah-reston.herokuapp.com
   - description: Delilah reston API 
@@ -45,20 +40,20 @@ paths:
           content: 
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response405'
+                $ref: '#/components/schemas/responseError'
                 
         '500':
           description: server error
           content: 
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response500'
+                $ref: '#/components/schemas/responseError'
         '200':
           description: user add successful
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/signupResponse200'
+                $ref: '#/components/schemas/response200'
       requestBody:
         $ref: '#/components/requestBodies/newUser'
    
@@ -83,19 +78,19 @@ paths:
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response500'
+                $ref: '#/components/schemas/responseError'
         '404':
           description: email not found
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response404'
+                $ref: '#/components/schemas/responseError'
         '401':
           description: password incorretly
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response401'
+                $ref: '#/components/schemas/responseError'
   /api/user:
     get:
       tags:
@@ -110,13 +105,14 @@ paths:
           description: with token get informacion
           schema:
               type: string
+              example: code_token
       responses:
         '500':
           description: server error
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response500'
+                $ref: '#/components/schemas/responseError'
         '400':
           description: token required
           content: 
@@ -166,7 +162,7 @@ paths:
           content: 
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response500'
+                $ref: '#/components/schemas/responseError'
         '200':
           description: all product
           content:
@@ -195,7 +191,7 @@ paths:
           description: with token validate rol
           schema:
             type: string
-          
+            example: code_token
       requestBody:
         content:
           aplication/json:
@@ -207,7 +203,7 @@ paths:
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response500'
+                $ref: '#/components/schemas/responseError'
                         
         '400':
           description: data invalid
@@ -234,6 +230,7 @@ paths:
           description: with token get informacion
           schema:
             type: string
+            example: code_token
       requestBody:
         content: 
           aplication/json:
@@ -245,13 +242,13 @@ paths:
           content:
               aplication/json:
                 schema:
-                   $ref: '#/components/schemas/response500'
+                   $ref: '#/components/schemas/responseError'
         '403':
           description: not allow
           content:
               aplication/json:
                 schema:
-                  $ref: '#/components/schemas/response403'
+                  $ref: '#/components/schemas/responseError'
         '400':
           description: data invalid
           content:
@@ -265,8 +262,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/response200'
       
-        
-                
   '/api/product/{id}':            
     delete:
       tags:
@@ -280,31 +275,32 @@ paths:
           description: id identification product
           schema:
             type: integer
+            example: 1
       responses:
         '500':
           description: server error
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response500'
+                $ref: '#/components/schemas/responseError'
         '403':
           description: not allow
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response403'
+                $ref: '#/components/schemas/responseError'
         '400':
           description: id required
           content:
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response401'
+                $ref: '#/components/schemas/responseError'
         '401':
           description: token required
           content: 
             aplication/json:
               schema:
-                $ref: '#/components/schemas/response401'
+                $ref: '#/components/schemas/responseError'
         '200':
           description: operation successful
           content:
@@ -326,22 +322,145 @@ paths:
             required: true
             description: with token get informacion
             schema:
-              type: string        
+              type: string
+              example: code_token
         responses:
-         '500':
+          '500':
+            description: server error
+            content:
+              aplication/json:
+                schema: 
+                  $ref: '#/components/schemas/responseError'
+          '403':
+            description: not allow
+            content:
+              aplication/json:
+                schema:
+                  $ref: '#/components/schemas/responseError'
+          '400':
+            description: token required
+            content:
+              aplication/json:
+                schema:
+                  $ref: '#/components/schemas/responseError'
+          '200':
+            description: all orders
+            content:
+              aplication/json:
+                schema:
+                  type: object
+                  properties: 
+                    message:  
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/order'
+                    
+    post:
+      tags:
+        - order
+      description: all user can create a new order
+      summary: createOrder
+      parameters:
+          - name: authorization
+            in: header
+            required: true
+            description: with token get informacion
+            schema:
+              type: string
+              example: code_token
+      requestBody:
+        content:
+          aplication/json:
+            schema:
+              type: object
+              properties:
+                products_id:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '500':
           description: server error
           content:
+             aplication/json:
+               schema:
+                  $ref: '#/components/schemas/responseError'
+        '400':
+          description: data invalid
+          content:
+              aplication/json:
+                schema:
+                  $ref: '#/components/schemas/response400'
+        '401':
+          description: token required
+          content:
             aplication/json:
-              schema: 
-                $ref: '#/components/schemas/response500'
-        
-        
-        
+              schema:
+                $ref: '#/components/schemas/responseError'
+        '200':
+          description: successful order creation
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/response200'
+                
+    put:
+      tags:
+         - order
+      description: update status order
+      summary: updateOrder
+      parameters:
+          - name: authorization
+            in: header
+            required: true
+            description: with token get informacion
+            schema:
+              type: string
+              example: code_token
+      requestBody:
+        content:
+          aplication/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: 
+                    - entregado
+                    - cancelado
+                    - terminado
+                order_id:
+                  type: integer
+                  example: 2
+      responses:
+        '500':
+          description: server error, retry
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+        '403':
+          description: not allow
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+        '400':
+          description: data invalid
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/response400'
+        '200':
+          description: successful order update
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/response200'
 components:
-
-
   schemas:
-  
     product:
       type: object
       properties:
@@ -358,9 +477,25 @@ components:
           type: integer
           example: 8000
           
-  
-  
-    newUser:
+    order:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        deatil_id:
+          type: integer
+          example: 1
+        status_order:
+          type: string
+          example: preparacion
+        total_price:
+          type: integer
+          example: 8000
+        user_id:
+          type: integer
+          example: 6
+    user:
       type: object
       required:
         - all
@@ -402,51 +537,17 @@ components:
             type: string
           error:
             type: string
-    response403:
+    responseError:
       type: object
       properties:
         message:
           type: string
-        
-    response405:
-      type: object
-      properties:
-        message:
-          type: string
-          
-    response500:
-      type: object
-      properties:
-        message:
-          type: string
-    
-    response404:
-      type: object
-      properties:
-        message:
-          type: string
-    
-    response401:
-      type: object
-      properties:
-        message:
-          type: string
-    
+
     response200:
       type: object
       properties:
         message:
           type: string
-    
-    
-          
-    signupResponse200:
-      type: object
-      properties:
-        message:
-          type: string
-        
-        
 
       
   requestBodies:
@@ -469,4 +570,4 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/newUser'
+            $ref: '#/components/schemas/user'

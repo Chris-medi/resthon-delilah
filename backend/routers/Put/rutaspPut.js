@@ -39,14 +39,14 @@ routerPut.put('/order',validate_rol,(req,res)=>{
        connection.query(sql,[status,order_id],(err,rows)=>{
            httpError500(err,res)
             res.json({
-                message: "Actualizacion exitosa del estado de la orden"
+                message: "succesful order update"
             })
        })
        
     }else{
 
         res.status(400).json({
-            message:"Datos invalidos",
+            message:"Data invalid",
             details: result_validation
         })
     }
