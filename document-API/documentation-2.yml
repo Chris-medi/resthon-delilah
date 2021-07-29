@@ -164,7 +164,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/responseError'
         '200':
-          description: all product
+          description: all products
           content:
             aplication/json:
               schema:
