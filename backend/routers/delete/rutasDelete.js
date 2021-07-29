@@ -7,6 +7,11 @@ const httpError500 = require('../../helper/dandleError')
 
 routerDelete.delete('/product/:id',(req,res) => {
     const {id} = req.params
+    if(!id){
+        res.status(400).json({
+            message: "id required"
+        })
+    }
     connection.query('DELETE  FROM Products WHERE Product_id = ?',[id],(err,rows) =>{
         httpError500(err,res)
         res.json({
@@ -17,6 +22,11 @@ routerDelete.delete('/product/:id',(req,res) => {
 
 routerDelete.delete('/order/:id',(req,res)=>{
     const {id} = req.params;
+    if(!id){
+        res.status(400).json({
+            message: "id required"
+        })
+    }
     connection.query('DELETE  FROM Orders where orders_id = ?',[id],(err,rows)=>{
         httpError500(err,res)
         res.json({

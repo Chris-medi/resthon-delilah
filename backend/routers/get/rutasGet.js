@@ -28,11 +28,11 @@ routerGet.get('/products',(req,res)=>{
      connection.query('SELECT * FROM Products',(err,rows)=>{
         if(err){
             res.status(500).json({
-                message:"Error en el servidor"
+                message:"server error"
             })
         }
         res.json({
-            message:"productos disponibles",
+            message:"all products available",
             data:rows
         })
         
@@ -44,7 +44,7 @@ routerGet.get('/orders',validate_rol,(req,res)=>{
   connection.query('SELECT * FROM Orders',(err,rows)=>{
       if(err){
           res.status(500).json({
-              message: "Error en el servidor vuelve a intentarlo"
+              message: "server error"
           })
           rs.json({
               message: "Todas las ordenes",
@@ -70,10 +70,11 @@ routerGet.get('/user',(req,res)=>{
             connection.query('SELECT * FROM Users WHERE email = ?',[info_descode],(err,rows)=>{
                 if(err){
                     res.status(500).json({
-                        message: "Error en le servidor vuelve a intentarlo"
+                        message: "server error"
                     })
                 }
                 res.json({
+                    message: "found user",
                     data:{
                         rows
                     }

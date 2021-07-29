@@ -47,15 +47,60 @@ routerPost.post('/signup',async(req,res)=>{
 
     if(validate_joi.error!=null){
         res.status(400).json({
-            status:false,
-            message: "datos invalidos",
+            message: "datos invalidad",
             error: validate_joi.error.details[0].message
         })
     }
 
 })
 
+//edpoint usuario ingresar
+routerPost.post('/signin',(req,res)=>{
+    const {email,password} = req.body
+    // console.log(req.body);
+    if(email==null || password==null){
+        res.statu(400).json({
+            message: "Data required",
+            details: "email and password"
+        })
+    }
+    //llamar a la base de datos
+    connection.query(`SELECT * FROM Users WHERE  email = ?`,[email],(err,rows)=>{
+        if(err){
+            res.status(500).json({
+                message:"server error",
+                error:err.name
+            })
+        }
+        if(!err){
+            if(rows.length == null){
+                res.status(404).json({
+                message:"email not found "
+                })
+          }else{
+                  const _token = crear_token(rows[0].email)
+                  const contraseña = comparar_hash(password,rows[0].password);
+                  if(contraseña){
+                
+                        res.json({
+                                message:"usuario encontrado",
+                                data:{
+                                        userName:rows[0].userName,
+                                        email:rows[0].email,
+                                    },
+                                token:_token
+                        
+                })
+                }else{
+                        res.status(401).json({    
+                        message:"contraseña incorrecta"
+                    })
+            }
+        }
+    }
+    })
 
+})
 
 
 
@@ -74,7 +119,7 @@ routerPost.post('/product',validate_rol,(req,res)=>{
 
         httpError500(err,res)
         res.json({
-            message: "producto agregado exitosamente a la base de datos"
+            message: "operation successful, add product to database"
         })
         //   if(!err){
         //   }
@@ -85,7 +130,7 @@ routerPost.post('/product',validate_rol,(req,res)=>{
     
   }else{
       res.status(400).json({
-          message: "datos invalidos",
+          message: "data invalid",
           error: result_valid.error.details[0].message
       })
   }
