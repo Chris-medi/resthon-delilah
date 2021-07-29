@@ -5,7 +5,8 @@ const {connection} = require('../../connection')
 
 const httpError500 = require('../../helper/dandleError')
 
-routerDelete.delete('/product/:id',(req,res) => {
+const {validate_rol } = require('../../js/validar-rol')
+routerDelete.delete('/product/:id',validate_rol,(req,res) => {
     const {id} = req.params
     if(!id){
         res.status(400).json({
@@ -20,14 +21,14 @@ routerDelete.delete('/product/:id',(req,res) => {
     })
 })
 
-routerDelete.delete('/order/:id',(req,res)=>{
+routerDelete.delete('/order/:id',validate_rol,(req,res)=>{
     const {id} = req.params;
     if(!id){
         res.status(400).json({
             message: "id required"
         })
     }
-    connection.query('DELETE  FROM Orders where orders_id = ?',[id],(err,rows)=>{
+    connection.query('DELETE  FROM Orders where order_id = ?',[id],(err,rows)=>{
         httpError500(err,res)
         res.json({
             message:"La Orden a sido borrada exitosamente"

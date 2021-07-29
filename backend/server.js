@@ -31,7 +31,7 @@ app.use('/api',routerGet);
 
 //--------------rutas PUT --------------
 const routerPut = require('./routers/Put/rutaspPut')
-app.use('/api', validate_rol,routerPut);
+app.use('/api',routerPut);
 
 
 //-------------rutas POST --------------
@@ -41,7 +41,7 @@ app.use('/api',routerPost);
 
 //--------------- rutas DELETE --------------
 const routerDelete = require('./routers/delete/rutasDelete');
-app.use('/api', validate_rol,routerDelete);
+app.use('/api',routerDelete);
 
 
 

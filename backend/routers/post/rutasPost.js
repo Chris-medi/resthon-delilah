@@ -66,12 +66,7 @@ routerPost.post('/signin',(req,res)=>{
     }
     //llamar a la base de datos
     connection.query(`SELECT * FROM Users WHERE  email = ?`,[email],(err,rows)=>{
-        if(err){
-            res.status(500).json({
-                message:"server error",
-                error:err.name
-            })
-        }
+        httpError500(err,res)
         if(!err){
             if(rows.length == null){
                 res.status(404).json({
@@ -93,7 +88,7 @@ routerPost.post('/signin',(req,res)=>{
                 })
                 }else{
                         res.status(401).json({    
-                        message:"contraseña incorrecta"
+                        message:"incorrect password"
                     })
             }
         }
@@ -121,11 +116,6 @@ routerPost.post('/product',validate_rol,(req,res)=>{
         res.json({
             message: "operation successful, add product to database"
         })
-        //   if(!err){
-        //   }
-        //   res.status(500).json({
-        //     message: "error en el servidor"
-        // })
       })
     
   }else{
@@ -141,17 +131,19 @@ routerPost.post('/product',validate_rol,(req,res)=>{
 
 //---------------------------------crear una orden--------
 
-routerPost.post('/order',async(req,res) => {
+routerPost.post('/order',(req,res) => {
     const {products_id} = req.body
     const {authorization} = req.headers
 
     //variable para tomar id  de la ultima orden y aumentarle en uno
 
     const promise_last_id = new Promise(function (resolve, reject) {
-        connection.query('SELECT orden_id FROM Orders',(err,rows) => {
+        connection.query('SELECT order_id FROM Orders',(err,rows) => {
+            // console.log(err)
+            httpError500(err,res)
             if(!err){
-                let last = rows.length-1
-                let  last_id = rows[last]['orden_id']
+                let last = rows.length
+                let  last_id = rows[last-1]['order_id']
                 resolve(last_id)
             }
         })
@@ -162,8 +154,8 @@ routerPost.post('/order',async(req,res) => {
     const valid =  validate_orden(req.body)
 
     if(authorization == null){
-        res.status(400).json({
-            message: "se requiere token"
+        res.status(401).json({
+            message: "token required"
         })
 
     }
@@ -171,12 +163,7 @@ routerPost.post('/order',async(req,res) => {
    
     const promise_total_price = new Promise((resolve,rejet)=>{
       connection.query(`SELECT SUM(price) FROM Products WHERE product_id IN (?) `,[products_id],(err,rows) =>{
-          if(err){
-              res.status(500).json({
-                  message: "Error vuelve a intertarlo",
-                  error:err
-                })
-            }
+        httpError500(err,res)
             resolve(rows[0]['SUM(price)'])
             // console.log(rows[0]['SUM(price)'])
       })
@@ -184,6 +171,7 @@ routerPost.post('/order',async(req,res) => {
     const promise_search_user = new Promise((resolve,rejet)=>{
         const {info_descode} = validar_token(authorization)
         connection.query(`SELECT ID FROM Users WHERE email= ?`,[info_descode],(err,rows) =>{
+            httpError500(err,res)
             if(!err){
                 resolve(rows[0].ID)
             }
@@ -195,28 +183,15 @@ routerPost.post('/order',async(req,res) => {
         let data = products_id.map((acc)=>{
             return [id_details,acc]
         })
-        
-
         // console.log(data)
         
         const sql = 'INSERT INTO `Orders`( `detail_id`, `total_price`, `user_id`) VALUES (?,?,?)'
         connection.query('INSERT INTO Details (detail_id,product_id) VALUES ?',[data],(err,rows) =>{
-            if(err){
-                res.status(500).json({
-                    message: "Error en el servidor",
-                    error:err
-                })
-            }
+            httpError500(err,res)
             connection.query(sql,[id_details,price,user_id],(err,rows) => {
-                if(err){
-                    res.status(500).json({
-                        message: "Error en el servidor",
-                        error:err
-                    })
-                }
+                httpError500(err,res)
                 res.json({
-                    message: "Orden creada",
-                    id:rows
+                    message: "successful order creation"
                 })
                 
         })
