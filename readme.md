@@ -13,8 +13,38 @@ A list of technologies used within the project:
 * [Express](https://expressjs.com/es/): Versio 4.17
 * [mysql](https://www.mysql.com/)
 
-### Installation
 
+
+
+### Requirements
+
+    You should have installed
+    
+* Xampp
+* Node.js > 14
+* Postman
+
+
+### Instructions
+
+1. Clone repo: ```git clone https://github.com/Chris-medi/resthon-delilah.git```
+2. Run command npm install
+3. open xampp 
+4. start mysql and apache
+5. open phpmyAdmin
+7. create a dataBase with nameUser root then import file `_database.sql` into
+8. Within the project create file .env then open it and writing this 
+
+```
+    FIRMA = 2145
+    HOST = 'localhost'
+    DATABASE = 'nameDataBase'
+    USER = 'root'
+    PASSWORD = ''
+    PORT = 3060
+```
+
+***
 the project is deploy so you don't need install nothing.
 You can use the project with the next url:
 
@@ -34,7 +64,7 @@ You can use the project with the next url:
 
 ```json
     {
-        "message": all products available,
+        "message": 'all products available',
         "data": [
             {
             "id": 1,
@@ -45,5 +75,6 @@ You can use the project with the next url:
         ]
     }
  ```
+
 
 
