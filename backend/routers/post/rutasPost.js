@@ -34,13 +34,13 @@ routerPost.post('/signup',async(req,res)=>{
 
             connection.query(sql,[email,fullName,userName,hash_password,Rol],(err,rows)=>{
                 httpError500(err,res)
-                res.json({ message: "Usuario registrado exitosamente" })
+                res.json({ message: "user add success" })
             })
 
         } 
         const user_error = ()=>{
             res.status(401).json({
-                message: "email ya existe"
+                message: "email ready exit"
             })
         }
     }
@@ -66,32 +66,32 @@ routerPost.post('/signin',(req,res)=>{
     }
     //llamar a la base de datos
     connection.query(`SELECT * FROM Users WHERE  email = ?`,[email],(err,rows)=>{
-        httpError500(err,res)
         if(!err){
             if(rows.length == null){
                 res.status(404).json({
-                message:"email not found "
+                    message:"email not found "
                 })
-          }else{
-                  const _token = crear_token(rows[0].email)
-                  const contraseña = comparar_hash(password,rows[0].password);
-                  if(contraseña){
-                
-                        res.json({
-                                message:"usuario encontrado",
-                                data:{
-                                        userName:rows[0].userName,
-                                        email:rows[0].email,
-                                    },
-                                token:_token
+            }else{
+                const _token = crear_token(rows[0].email)
+                const contraseña = comparar_hash(password,rows[0].password);
+                if(contraseña){
+                    res.json({
+                        message:"found user",
+                        data:{
+                            userName:rows[0].userName,
+                            email:rows[0].email,
+                        },
+                        token:_token
                         
-                })
+                    })
                 }else{
-                        res.status(401).json({    
+                    res.status(401).json({    
                         message:"incorrect password"
                     })
+                }
+                
             }
-        }
+            httpError500(err,res)
     }
     })
 

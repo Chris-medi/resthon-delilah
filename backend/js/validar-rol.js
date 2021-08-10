@@ -12,8 +12,9 @@ const validate_rol = (req,res,next)=>{
         })
     }else{
         const  {info_descode} =  validar_token(authorization);
+            console.log(info_descode)
         connection.query('SELECT rol FROM Users Where email = ?',[info_descode],(err,rows)=>{
-            // console.log(rows[0].rol)
+            console.log(err)
             if(err){
                 res.status(500).json({
                     message:"Error en el servidor"
