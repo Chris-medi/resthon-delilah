@@ -111,11 +111,12 @@ routerPost.post('/product',validate_rol,(req,res)=>{
       const {link_imagen,price,name} = req.body
             const sql = "INSERT INTO Products (link_image, name_product, price) VALUES (?,?,?)"
       connection.query(sql,[name,price,link_imagen],(err,rows)=>{
-
-        httpError500(err,res)
-        res.json({
-            message: "operation successful, add product to database"
-        })
+          if(!err){
+              res.json({
+                  message: "operation successful, add product to database"
+                })
+            }
+          httpError500(err,res)
       })
     
   }else{
