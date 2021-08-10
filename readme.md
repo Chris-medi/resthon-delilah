@@ -39,7 +39,7 @@ A list of technologies used within the project:
     FIRMA = 2145
     HOST = 'localhost'
     DATABASE = 'nameDataBase'
-    USER = 'root'
+    USERDATABASE = 'root'
     PASSWORD = ''
     PORT = 3060
 ```
@@ -49,7 +49,7 @@ the project is deploy so you don't need install nothing.
 You can use the project with the next url:
 
 ```
- https://delilah-reston.herokuapp.com
+ https://api-delilah-1.herokuapp.com/
 ```
 
 ### how to use
@@ -78,3 +78,6 @@ You can use the project with the next url:
 
 
 
+#### Note
+
+just there is a admin user, this user have all permits 
