@@ -58,7 +58,7 @@ You can use the project with the next url:
 
 ### OR
 
- * you can try it, you doing a request with a method **GET** to this **URL** ```https://delilah-reston.herokuapp.com/api/products```
+ * you can try it, you doing a request with a method **GET** to this **URL** ```https://api-delilah-1.herokuapp.com/api/products```
 
 * you get this response 
 
