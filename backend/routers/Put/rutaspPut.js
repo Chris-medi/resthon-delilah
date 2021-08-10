@@ -35,16 +35,16 @@ routerPut.put('/order',validate_rol,(req,res)=>{
     // console.log(result_validation)
     if(result_validation==true){
         
-       const sql = 'UPDATE Orders SET status_orden=? WHERE  orders_id = ?'
+       const sql = 'UPDATE Orders SET status_order= ? WHERE  order_id = ?'
        connection.query(sql,[status,order_id],(err,rows)=>{
            httpError500(err,res)
+        //    console.log(err)
             res.json({
                 message: "succesful order update"
             })
        })
        
     }else{
-
         res.status(400).json({
             message:"Data invalid",
             details: result_validation
