@@ -11,12 +11,12 @@ app.use(cors());
 
 
 //--------middleware--------
-const {validate_rol} = require('./js/validar-rol')
+//const {validate_rol} = require('./js/validar-rol')
 
 
 //recibir parametros desde el body
-app.use(express.urlencoded({ extended: false} ));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true} ));
 
 //------------definir rutas
 
